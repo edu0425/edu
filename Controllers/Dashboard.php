@@ -21,6 +21,11 @@
 			$data['page_title'] = " Dashboard - Veterinaria el Mister";
 			$data['page_name'] = "dashboard";
 			$data['page_functions_js'] = "functions_dashboard.js";
+			$data['menor'] = $this->model->select_Menor_stock();
+			$data['especie'] = $this->model->select_Numero_especies();
+			$data['cabeza'] = $this->model->select_Cabeza();
+			// dep($data);
+			// exit();
 			$this->views->getView($this,"dashboard",$data);
 		}
 
