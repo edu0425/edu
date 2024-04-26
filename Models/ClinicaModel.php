@@ -204,7 +204,7 @@
                         n.nota,
                         n.personaid,
                         n.historialid,
-                        n.datecreated as fecha,
+                        DATE_FORMAT(n.datecreated, '%d/%m/%Y') as fecha,
                         p.idpersona,
                         p.nombres,
                         p.apellidos

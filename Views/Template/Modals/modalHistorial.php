@@ -17,7 +17,7 @@
                   <h2 class="page-header" ><i class="fa fa-comments" aria-hidden="true"></i><small id="tipoComentario"> Agregar Comentarios</small></h2>
                 </div>
                 <div class="col-5">
-                  <h6 class="text-right">Fecha: <label id="txtfecha_comenta"></label></h6>
+                  <h6 class="text-right">Fecha: <label id="txtfecha_comenta">hoy</label></h6>
                 </div>
               </div>
               <form id="formNotas" name="formNotas" class="form-horizontal">
@@ -33,7 +33,7 @@
                         </div>
                         <div class="tile-footer">
                           <button id="btnguardar" class="btn btn-primary" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i><span id="btnText">Guardar</span></button>&nbsp;&nbsp;&nbsp;
-                          <!-- <button id="btnEliminar" class="btn btn-danger" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i><span id="btnText">Eliminar</span></button>&nbsp;&nbsp;&nbsp; -->
+                          <button id="btnEliminar" class="btn btn-danger" type="submit"><i class="fa fa-fw fa-lg fa-check-circle"></i><span id="btnText">Eliminar</span></button>&nbsp;&nbsp;&nbsp;
                           <button class="btn btn-secondary" type="button" onclick="cleanModal();" data-dismiss="modal"><i class="fa fa-fw fa-lg fa-times-circle"></i>Cerrar</button>
                         </div>
                       </div>

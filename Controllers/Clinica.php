@@ -25,6 +25,7 @@
 
 		public function historial(int $idmascota) {
 			$data['historia'] = $idmascota;
+			$data['id_Historial'] = $idmascota;
 			$data['page_tag'] = "Historial";
 			$data['page_title'] = "Historial Clinico de Mascota";
 			$data['page_name'] = "Hitorial";
@@ -356,5 +357,30 @@
 			}
 			die();
         }
+		public function getComentarios($idmascota) {
+			if($_SESSION['permisosMod']['r']){
+				$arrData = $this->model->selectNotas_hist($idmascota);
+				echo json_encode($arrData,JSON_UNESCAPED_UNICODE);
+			}
+			die();
+		}
+		public function delNota($Nota){
+			if($_SESSION['permisosMod']['d']){
+				$intPersonaid = intval($_SESSION['userData']['idpersona']);
+				$nombrePersona = strClean($_SESSION['userData']['nombres']." ".$_SESSION['userData']['apellidos']);
+				
+				$idnota = intval($_POST['idmascota']);
+				$requestDelete = $this->model->deleteNota($Nota);
+				if($requestDelete)
+				{
+					$request_registro = $this->model->setRegistro($nombrePersona, "Notas", "Eliminar", $idnota , $intPersonaid);
+					$arrResponse = array('status' => true, 'msg' => 'Se ha eliminado la Comentario','success' => true);
+				}else{
+					$arrResponse = array('status' => false, 'msg' => 'Error al eliminar al cliente.');
+				}
+				echo json_encode($arrResponse,JSON_UNESCAPED_UNICODE);
+			}
+			die();
+		}
 	}
 ?>

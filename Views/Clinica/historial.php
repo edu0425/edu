@@ -3,7 +3,9 @@ headerAdmin($data);
 getModal('modalHistorial', $data);
 ?>
 <script>
-    let baseURL = "<?php echo base_url(); ?>";
+    const baseURL = "<?php echo base_url(); ?>";
+    const usuario = "<?php echo $_SESSION['userData']['idpersona']; ?>";
+    const idHistorial = "<?php echo $data['id_Historial'];?>";
 </script>
 <main class="app-content">
     <div class="app-title">
@@ -64,32 +66,14 @@ getModal('modalHistorial', $data);
             <!--COMENTARIOS-->
             <div class="tile">
                 <div class="tile-body">
-                    <h3 class="text-center">Comentarios <?php if($_SESSION['permisosMod']['w']){ ?>
+                    <h3 class="text-center"><?php if($_SESSION['permisosMod']['w']){ ?>
                         <div class="btn btn-primary " type="button" onclick="newComentario(<?= $data['historia'] ?>);" ><i class="fas fa-plus-circle"></i> </div>
                     <?php } ?> 
-                    </h3>
+                     Comentarios</h3>
+                    <div id="comentariosContainer">
+
+                    </div>
                     
-                    <?php
-                    
-                    $notas = $data['notas'];
-                    for ($i = 0; $i < count($notas); $i++) {
-                        $not = $notas[$i];
-                        $idnota = $not["idnota"];
-                        $nota = $not["nota"];
-                        $fechaCompleta = $not["fecha"];
-                        $fecha = date("d/m/Y", strtotime($fechaCompleta));
-                        $usuario = $not["nombres"] . ' ' . $not["apellidos"];
-                    ?>
-                        <div onclick="openModalComentario(<?= $idnota ?>);" class="list-group-item list-group-item-action flex-column align-items-start">
-                            <p class="mb-1">"<?= $nota ?>"</p>
-                            <div class="d-flex w-100 justify-content-between">
-                                <small class="text-muted"><?= $usuario ?></small>
-                                <small class="text-muted"><?= $fecha ?></small>
-                            </div>
-                        </div>
-                    <?php
-                    }
-                    ?>
 
                 </div>
             </div>

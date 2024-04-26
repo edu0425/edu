@@ -4,6 +4,8 @@ let divLoading = document.querySelector("#divLoading");
 let rutaPDFanalisis = "";
 document.addEventListener("DOMContentLoaded", function () {
     fntCreateNota();
+    cargarComentarios();
+    // console.log(idHistorial)
 },false);
 function openModalAnalisis(){
 
@@ -152,6 +154,9 @@ function fntConsulta(idcon){
         $('#modalHistorialConsulta').modal('show');
     }
 }
+function cleanModal(){
+    $("#modalHistorialComentarios").modal("hide");
+}
 function openModalComentario(idnota){
     let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
     let ajaxUrl = base_url+'/Clinica/getNota/'+idnota;
@@ -169,11 +174,19 @@ function openModalComentario(idnota){
                 document.getElementById("txtfecha_comenta").innerText = objData.data.fecha;
                 document.getElementById("txtComentario").innerText = objData.data.nota;
                 $('#btnguardar').hide();
+                let idpersona = objData.data.personaid;
+                
+                if(idpersona == usuario){
+                    $('#btnEliminar').show();
+                }else{
+                    $('#btnEliminar').hide();
+                }
             }
         }
         $("#modalHistorialComentarios").modal("show");
     }
 };
+
 function newComentario(hitoria){
     document.querySelector("#idhistorial_notas").value = hitoria;
     document.querySelector("#idnota").value = "";
@@ -181,6 +194,7 @@ function newComentario(hitoria){
     document.getElementById("txtfecha_comenta").innerText = "";
     document.getElementById("txtComentario").innerText ="";
     $("#modalHistorialComentarios").modal("show");
+    $('#btnguardar').show();
     $('#btnEliminar').hide();
     // document.getElementById('nombre_del_elemento').style.display = 'none';
 };
@@ -202,7 +216,8 @@ function fntCreateNota() {
               $("#modalHistorialComentarios").modal("hide");
               formNota.reset();
               swal("Comentario", objData.msg, "success");
-               location.reload(true);
+            //    location.reload(true);
+            cargarComentarios();
             } else {
               swal("Error", objData.msg, "error");
             }
@@ -249,40 +264,38 @@ function fntCreateNota() {
 
     });
 }
-document.getElementById('myButton').onclick = btnAnalisis;
-var btnAnalisis = function() {
-    idnota = document.querySelector("#idhistorial_notas").value
-    swal({
-        title: "Eliminar el Comentario",
-        text: "¿Realmente quiere eliminar a la Mascota?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Si, eliminar!",
-        cancelButtonText: "No, cancelar!",
-        closeOnConfirm: false,
-        closeOnCancel: true
-    }, function(isConfirm) {
-        if (isConfirm) 
-        {
-            let request = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-            let ajaxUrl = base_url+'/Clinica/delNota';
-            let strData = "idnota="+idnota;
-            request.open("POST",ajaxUrl,true);
-            request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            request.send(strData);
-            request.onreadystatechange = function(){
-                if(request.readyState == 4 && request.status == 200){
-                    let objData = JSON.parse(request.responseText);
-                    if(objData.status)
-                    {
-                        swal("Eliminado!", objData.msg , "success");
-                    }else{
-                        swal("Atención!", objData.msg , "error");
-                    }
-                }
+
+function cargarComentarios() {
+    let url = base_url+'/Clinica/getComentarios/'+idHistorial;
+    const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                const comentarios = JSON.parse(xhr.responseText);
+                mostrarComentarios(comentarios);
+            } else {
+                console.error('Error al obtener los comentarios');
             }
-        }
+        };
+        xhr.send();
+}
 
+function mostrarComentarios(comentarios) {
+    const container = document.getElementById('comentariosContainer');
+    container.innerHTML = '';
+    comentarios.forEach(comentario => {
+        const card = document.createElement('div');
+        let comentador = comentario.nombres+" "+comentario.apellidos;
+        card.className = 'card';
+        card.innerHTML = `
+                        <div onclick="openModalComentario(${comentario.idnota});" class="list-group-item list-group-item-action flex-column align-items-start">
+                            <p class="mb-1">"${comentario.nota}"</p>
+                            <div class="d-flex w-100 justify-content-between">
+                                <small class="text-muted">${comentador}</small>
+                                <small class="text-muted">${comentario.fecha}</small>
+                            </div>
+                        </div>
+        `;
+        container.appendChild(card);
     });
-};
-
+}
